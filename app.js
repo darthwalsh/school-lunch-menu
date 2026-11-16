@@ -1,3 +1,4 @@
+import { addDays, toIso, weekFromParam } from "./dates.js";
 import { fetchMonth, mainItem } from "./menu.js";
 
 const grid = document.getElementById("grid");
@@ -17,17 +18,7 @@ function loadMonth(year, month) {
   return monthCache.get(key);
 }
 
-const pad = (n) => String(n).padStart(2, "0");
-const toIso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
-const mondayOf = (d) => addDays(d, -((d.getDay() + 6) % 7));
-
-function weekFromUrl() {
-  const param = new URLSearchParams(location.search).get("week");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(param)) return mondayOf(new Date());
-  const [year, month, day] = param.split("-").map(Number);
-  return mondayOf(new Date(year, month - 1, day));
-}
+const weekFromUrl = () => weekFromParam(new URLSearchParams(location.search).get("week"), new Date());
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
